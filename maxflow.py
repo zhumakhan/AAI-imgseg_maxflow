@@ -1,6 +1,9 @@
 from PIL import Image
+from collections import defaultdict as ddict
 
 INF = 1e10
+SCALE = 1e5
+dirs = ((-1, 0), (0, -1))
 
 def bfs(adj, capacity, s, t, parent):
 	parent[:]=-1
@@ -44,10 +47,39 @@ def maxflow(adj, capacity, s, t, n):
 			curr = prev
 
 
-def im2graph(filepath):
+def inference(filepath, lamda, sigma):
 	image = Image.open(filepath).convert('L')
 	h,w = image.shape
+
+	max_weight = -INF
+
+	adj = [[] for _ in range(h*w)]
+	# capacity = [ddict(lamda:0) for _ in range(h*w)]
+	capacity = [{} for _ in range(h*w)]
+
+	for i in range(h):
+		for j in range(w):
+			pi = image[i][j]
+			for d in dirs:
+				ii = i + d[0]
+				jj = j + d[1]
+				if ii < 0 or jj < 0:
+					continue
+				qi = image[ii][jj]
+				l2dis = abs(pi-qi)
+				n_weight = lamda*exp(-l2dis*l2dis/(2*sigma*sigma))
+				n_weight_int = int(n_weight*SCALE)
+				adj[i*w+j].append(ii*w+j)
+				adj[ii*w+j].append(i*w+j)
+				capacity[i*w+j][ii*w+j]=n_weight_int
+				capacity[ii*w+j][i*w+j]=n_weight_int
+				max_weight = max(max_weight, n_weight_int)
+
 	
+	max_weight = SCALE * max_weight
+	
+
+
 
 
 
