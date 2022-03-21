@@ -65,7 +65,7 @@ def maxflow(adj, capacity, s, t, n):
 	return flow
 
 
-def inference(image, mask):
+def inference(image):
 	lamda = 20.0
 	sigma = 10.0
 
@@ -142,7 +142,7 @@ if __name__ == '__main__':
 	mask = Image.open('brain_mask.png').convert('L')
 	mask = np.asarray(mask.resize((50, 50), Image.ANTIALIAS),dtype=np.float32)
 
-	label=inference(image,mask)
+	label=inference(image)
 	plt.subplot(1,3,1); plt.axis('off'); plt.imshow(image);  plt.title('input image')
 	plt.subplot(1,3,2); plt.axis('off'); plt.imshow(mask);   plt.title('initial \n segmentation')
 	plt.subplot(1,3,3); plt.axis('off'); plt.imshow(label); plt.title('CRF result')
