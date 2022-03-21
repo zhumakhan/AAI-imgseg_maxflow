@@ -69,7 +69,7 @@ def inference(image, mask):
 	lamda = 20.0
 	sigma = 10.0
 
-	P = mask / 255
+	P = image / 255
 	fP = 0.5 + (P-0.5) * 0.8
 	bP = 1.0 - fP
 	prob = np.asarray([bP, fP])
